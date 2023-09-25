@@ -26,10 +26,10 @@
 	],
 	"license": "GPL-2.0-or-later",
 	"require": {
-		"typo3/cms-backend": "^11.4",
-		"typo3/cms-core": "^11.4",
-		"typo3/cms-extbase": "^11.4",
-		"typo3/cms-frontend": "^11.4"
+		"typo3/cms-backend": "^11.4 || ^12",
+		"typo3/cms-core": "^11.4 || ^12",
+		"typo3/cms-extbase": "^11.4 || ^12",
+		"typo3/cms-frontend": "^11.4 || ^12"
 	},
 	"require-dev": {
 		"friendsofphp/php-cs-fixer": "^3.1",
