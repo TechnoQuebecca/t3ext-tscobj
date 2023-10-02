@@ -19,6 +19,7 @@ declare(strict_types=1);
 
 namespace Causal\Tscobj\Controller\Wizard;
 
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Controller\Wizard\AbstractWizardController;
@@ -46,7 +47,7 @@ class TypoScriptBrowser extends AbstractWizardController
      */
     protected $moduleTemplate;
 
-    public function __construct()
+    public function __construct(private IconFactory $iconFactory)
     {
         $this->moduleTemplate = GeneralUtility::makeInstance(ModuleTemplate::class);
         $this->getLanguageService()->includeLLFile('EXT:tscobj/Resources/Private/Language/locallang_wizards.xlf');
@@ -105,7 +106,7 @@ class TypoScriptBrowser extends AbstractWizardController
             $closeButton = $buttonBar->makeLinkButton()
                 ->setHref($this->P['returnUrl'])
                 ->setTitle($this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:rm.closeDoc'))
-                ->setIcon($this->moduleTemplate->getIconFactory()->getIcon('actions-close', Icon::SIZE_SMALL));
+                ->setIcon($this->iconFactory->getIcon('actions-close', Icon::SIZE_SMALL));
             $buttonBar->addButton($closeButton, ButtonBar::BUTTON_POSITION_LEFT, 10);
         }
     }

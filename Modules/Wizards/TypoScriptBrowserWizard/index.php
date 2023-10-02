@@ -1,5 +1,8 @@
 <?php
 
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\RootlineUtility;
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -28,7 +31,6 @@ use TYPO3\CMS\Backend\Template\DocumentTemplate;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\TypoScript\TemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
 // Properly compute BACK_PATH when using symbolic links
 if (!empty($_SERVER['SCRIPT_FILENAME'])) {
@@ -57,12 +59,12 @@ class tx_tscobj_wiz1 extends BaseScriptClass
     protected $pageinfo;
 
     /**
-     * @var \TYPO3\CMS\Frontend\Page\PageRepository
+     * @var PageRepository
      */
     protected $sys_page;
 
     /**
-     * @var \TYPO3\CMS\Core\TypoScript\TemplateService
+     * @var TemplateService
      */
     protected $tmpl;
 
@@ -377,7 +379,7 @@ class tx_tscobj_wiz1 extends BaseScriptClass
     public function addStyles()
     {
         // Get stylesheet path
-        $path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('tscobj') . 'wiz1/stylesheet.css.tmpl';
+        $path = ExtensionManagementUtility::extPath('tscobj') . 'wiz1/stylesheet.css.tmpl';
 
         // Read stylesheet
         $styles = GeneralUtility::getURL($path);
@@ -403,17 +405,15 @@ class tx_tscobj_wiz1 extends BaseScriptClass
     {
         // Initialize the page selector
         $this->sys_page = GeneralUtility::makeInstance(PageRepository::class);
-        $this->sys_page->init(true);
 
         // initialize the TS template
         $this->tmpl = GeneralUtility::makeInstance(TemplateService::class);
-        $this->tmpl->init();
 
         // Avoid an error
         $this->tmpl->tt_track = 0;
 
         // Get rootline for current PID
-        $rootline = $this->sys_page->getRootLine($this->P['pid']);
+        $rootline = GeneralUtility::makeInstance(RootlineUtility::class, $this->P['pid'], '')->get();
 
         // Start TS template
         $this->tmpl->start($rootline);
