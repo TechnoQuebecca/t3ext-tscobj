@@ -20,13 +20,28 @@ declare(strict_types=1);
 namespace Causal\Tscobj\Controller;
 
 use Causal\Tscobj\Exception\ObjectNotFoundException;
-use TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 
-class TypoScriptObjectController extends AbstractPlugin
+class TypoScriptObjectController
 {
+    /**
+     * The back-reference to the mother cObj object set at call time
+     */
+    public $cObj;
+
     public $prefixId = 'tx_tscobj_pi1';
 
     public $extKey = 'tscobj';
+
+    /**
+     * This setter is called when the plugin is called from UserContentObject (USER)
+     * via ContentObjectRenderer->callUserFunction().
+     *
+     * @param ContentObjectRenderer $cObj
+     */
+    public function setContentObjectRenderer(ContentObjectRenderer $cObj): void
+    {
+        $this->cObj = $cObj;
+    }
 
     /**
      * Returns the content object of the plugin.
@@ -96,5 +111,35 @@ class TypoScriptObjectController extends AbstractPlugin
         }
 
         return [$contentType, $typoScriptObject];
+    }
+
+/* Converts $this->cObj->data['pi_flexform'] from XML string to FlexForm array.
+*
+* @param string $field Field name to convert
+*/
+    public function pi_initPIflexForm($field = 'pi_flexform')
+    {
+        // Converting flexform data into array
+        $fieldData = $this->cObj->data[$field] ?? null;
+        if (!is_array($fieldData) && $fieldData) {
+            $this->cObj->data[$field] = GeneralUtility::xml2array((string)$fieldData);
+            if (!is_array($this->cObj->data[$field])) {
+                $this->cObj->data[$field] = [];
+            }
+        }
+    }
+
+    public function pi_getFFvalue(
+        $T3FlexForm_array,
+        $fieldName,
+        $sheet = 'sDEF',
+        $lang = 'lDEF',
+        $value = 'vDEF'
+    ) {
+        $sheetArray = $T3FlexForm_array['data'][$sheet][$lang] ?? '';
+        if (is_array($sheetArray)) {
+            return $this->pi_getFFvalueFromSheetArray($sheetArray, explode('/', $fieldName), $value);
+        }
+        return null;
     }
 }
