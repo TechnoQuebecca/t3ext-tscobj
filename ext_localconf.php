@@ -27,7 +27,7 @@ tt_content.list.20.tscobj_pi1 =< plugin.tx_tscobj_pi1
     ];
 
     ExtensionManagementUtility::addPageTSConfig(
-        '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tscobj/Configuration/TSconfig/Page/Mod/Wizards/NewContentElement.typoscript">'
+        "@import 'EXT:tscobj/Configuration/TSconfig/Page/Mod/Wizards/NewContentElement.typoscript' "
     );
 
     // Hook in Web > Page content (for TypoScript path preview in content element)
