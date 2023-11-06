@@ -74,7 +74,9 @@ class TypoScriptObjectController
             return '<strong>' . $this->pi_getLL('errors.notfound') . '</strong> (' . $typoScriptObjectPath . ')';
         }
 
-        if (!isset($GLOBALS['TYPO3_CONF_VARS']['FE']['ContentObjects'][$contentType])) {
+        // FIXME: There is no other way to check if a content element is registered
+        $contentObjectFactory = GeneralUtility::makeInstance(ContentObjectFactory::class);
+        if ($contentObjectFactory->getContentObject($contentType, $this->cObj->getRequest(), $this->cObj) === null) {
             // Invalid content type
             return '<strong>' . $this->pi_getLL('errors.invalid') . '</strong> (' . $contentType . ')';
         }
